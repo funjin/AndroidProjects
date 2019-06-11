@@ -17,8 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.List;
+
+import static student.jnu.com.bookshelf.MainActivity.adapter;
 
 public class ScannerActivity extends AppCompatActivity {
     private TabLayout tablayout;
@@ -127,9 +130,13 @@ public class ScannerActivity extends AppCompatActivity {
                 break;
 
             case R.id.bookdone:
-
                 for(Book book:MainActivity.addbook){
-                    DatabaseOP.getInstance().insertBook(book);
+                    for (Book book1:DatabaseOP.getInstance().selectALLBook()){
+                        if (!book1.getISBN().equals(book.getISBN()))
+                            DatabaseOP.getInstance().insertBook(book);
+                        else
+                            Toast.makeText(this, book.getName()+"重复", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                  Intent intent=new Intent(ScannerActivity.this,MainActivity.class);
@@ -137,9 +144,6 @@ public class ScannerActivity extends AppCompatActivity {
                  startActivity(intent);
                 break;
             case R.id.handbook:
-
-
-
 
         }
         return super.onOptionsItemSelected(item);
